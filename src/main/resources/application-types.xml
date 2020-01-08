@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="americansws" format="json">
+      <types:shape format="weave" example="examples/americansws.json"><![CDATA[%dw 2.0
+type americansws = Array<{|
+  code: String, 
+  planeType: String, 
+  totalSeats: Number {"typeId": "int"}, 
+  destination: String, 
+  takeOffDate: String, 
+  origin: String, 
+  price: Number {"typeId": "int"}, 
+  airlineName: String, 
+  seatsAvailable: Number {"typeId": "int"}, 
+  ID: Number {"typeId": "int"}
+|}> {"MetadataFormat": "json",
+"example": "[{\"code\":\"rree0001\",\"planeType\":\"Boeing 787\",\"totalSeats\":200,\"destination\":\"LAX\",\"takeOffDate\":\"2016-01-20T00:00:00\",\"origin\":\"MUA\",\"price\":541,\"airlineName\":\"American Airlines\",\"seatsAvailable\":0,\"ID\":1}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#f8e296bd-ed91-461e-a003-9eb627f0db49"/>
+  <types:enrichment select="#711c25c5-ec9d-47cd-9e45-143bf5aaa4e4">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="americansws"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#b4fc6b87-21b9-4cb7-9a6e-474391f12f47">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="americansws"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

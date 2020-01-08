@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="546e2e89-87aa-4f36-84dc-bbcaced2ae4e" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="2c252139-d887-425b-b574-3d053c9a92c7" >
+		<db:my-sql-connection host="mudb.mulesoft-training.com" port="3306" user="mule" password="mule" database="training" />
+	</db:config>
+	<flow name="americanwsGet" doc:id="d9b574c1-6e91-4f63-be67-0f351f905ec2" >
+		<db:select doc:name="Select" doc:id="2164bc0c-2d92-496b-95d6-9ad1419028c1" config-ref="Database_Config">
+			<db:sql >select * from american where toAirport = :destination</db:sql>
+			<db:input-parameters ><![CDATA[#[{"destination" :attributes.queryParams.destination}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="711c25c5-ec9d-47cd-9e45-143bf5aaa4e4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	code: (payload01.code1 default "") ++ (payload01.code2 default ""),
+	planeType: payload01.planeType default "",
+	totalSeats: payload01.totalSeats default 0,
+	destination: payload01.toAirport default "",
+	takeOffDate: payload01.takeOffDate as String default "",
+	origin: payload01.fromAirport default "",
+	price: payload01.price default 0,
+	airlineName: payload01.airlineName default "",
+	seatsAvailable: payload01.seatsAvailable default 0,
+	ID: payload01.ID
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="bb7766bd-13b1-4817-9f55-176c0966239e" message="#[payload]"/>
+	</flow>
+	<flow name="americanwsGetbyID" doc:id="cf5a0dc8-6cfa-4d38-a616-1c7a8b4620e0" >
+		<db:select doc:name="Select" doc:id="51708704-52b3-4a4c-a6e9-592f01ae7a39" config-ref="Database_Config">
+			<db:sql >select * from american where ID = :ID</db:sql>
+			<db:input-parameters ><![CDATA[#[{"ID": attributes.uriParams.ID}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="b4fc6b87-21b9-4cb7-9a6e-474391f12f47" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	code: (payload01.code1 default "") ++ (payload01.code2 default ""),
+	planeType: payload01.planeType default "",
+	totalSeats: payload01.totalSeats default 0,
+	destination: payload01.toAirport default "",
+	takeOffDate: payload01.takeOffDate as String default "",
+	origin: payload01.fromAirport default "",
+	price: payload01.price default 0,
+	airlineName: payload01.airlineName default "",
+	seatsAvailable: payload01.seatsAvailable default 0,
+	ID: payload01.ID
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="593fdcde-c012-4f41-91e0-ad0a53a80e40" message="#[payload]"/>
+	</flow>
+	<flow name="americanwsPost" doc:id="4995d479-506a-4553-a05c-f9f810b482cc" >
+		<set-payload value='{"Message": "FLights has been added (but not really)"}' doc:name="Set Payload" doc:id="c564d24c-5a69-4bf7-9d2b-99db5c8e503d" mimeType="application/json"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ae9be18b-8085-489e-a987-2def581f9d3f" message="#[payload]"/>
+	</flow>
+	<flow name="americanwsPut" doc:id="bc882297-722f-459a-b196-00ce79c2928b" >
+		<set-payload value='{"Message": "FLights has been updated (but not really)"}' doc:name="Set Payload" doc:id="2d96682b-7dba-4550-ba9f-e3dac799279f" mimeType="application/json" />
+		<logger level="INFO" doc:name="Logger" doc:id="cd194bbf-1b7d-490b-9ae5-58b692612eef" message="#[payload]" />
+	</flow>
+	<flow name="americanwsDelete" doc:id="d0ff6d7b-0122-4e28-a150-a0b2d1f87ef1" >
+		<set-payload value='{"Message": "FLights has been deleted (but not really)"}' doc:name="Set Payload" doc:id="c0bb9163-11a1-4800-a0fa-ec3a622976e8" mimeType="application/json" />
+		<logger level="INFO" doc:name="Logger" doc:id="3e73d3e6-a692-461f-b2f7-ff6886bcea33" message="#[payload]" />
+	</flow>
+</mule>

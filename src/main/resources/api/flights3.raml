@@ -1,0 +1,112 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/69729196-a5d6-47f8-be4e-2fceb45a5f6b/ # 
+title: Flights3
+version: 1
+protocols:
+  - HTTP
+  - HTTPS
+/Flights:
+  get:
+    queryParameters:
+      destination:
+        required: true
+        enum:
+          - LAX, SFO, CLE
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              [
+                {
+                  "ID": 1,
+                  "price": "569.26",
+                  "departureDate": "23/12/2019",
+                  "origin": "LAX",
+                  "destination": "SFO",
+                  "plane": {
+                    "type": "Boeing 737",
+                    "totalSeats": "150"
+                  }
+                },
+                {
+                  "ID": 2,
+                  "price": "678.89",
+                  "origin": "CLE",
+                  "destination": "LAX",
+                  "deparureDate": "26/12/2019",
+                  "plane": {
+                    "type": "Boeing 737",
+                    "totalSeats": "150"
+                  }
+                }
+              ]
+  post:
+    displayName: Add the Flight
+    body:
+      application/json:
+        example:
+          {
+            "ID": 2,
+            "price": "678.89",
+            "origin": "CLE",
+            "destination": "LAX",
+            "deparureDate": "26/12/2019",
+            "plane": {
+            "type": "Boeing 737",
+            "totalSeats": "150"
+          }
+          }
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              {"Message": "Flights added successfully (but not really)"}
+/{ID}:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {
+            "ID": 2,
+            "price": "678.89",
+            "origin": "CLE",
+            "destination": "LAX",
+            "deparureDate": "26/12/2019",
+            "plane": {
+            "type": "Boeing 737",
+            "totalSeats": "150"
+          }
+          }
+  delete:
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {"Message": "Flights has been deleted (but not really)"}
+  put:
+    displayName: Update Flights
+    body:
+      application/json:
+        example:
+          {
+            "ID": 2,
+            "price": "678.89",
+            "origin": "CLE",
+            "destination": "LAX",
+            "deparureDate": "26/12/2019",
+            "plane": {
+            "type": "Boeing 737",
+            "totalSeats": "150"
+          }
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {"Message": "Flights has been updated (but not really)"}
